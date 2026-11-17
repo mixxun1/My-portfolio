@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[활동명] | 포트폴리오</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --surface: #171a21;
+    --line: #262a33;
+    --text: #e8e9ec;
+    --muted: #9aa0ab;
+    --accent: #7c9cff;
+    --accent-2: #b48cff;
+    --radius: 14px;
+    --max: 1080px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    word-break: keep-all;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* ---------- 내비게이션 ---------- */
+  header {
+    position: fixed; inset: 0 0 auto 0; z-index: 50;
+    background: rgba(15,17,21,.75);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav {
+    max-width: var(--max); margin: 0 auto; padding: 0 24px;
+    height: 64px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo { font-weight: 800; letter-spacing: -.02em; font-size: 1.1rem; }
+  .logo span { color: var(--accent); }
+  .menu { display: flex; gap: 28px; list-style: none; }
+  .menu a { color: var(--muted); font-size: .95rem; transition: color .2s; position: relative; }
+  .menu a:hover, .menu a.active { color: var(--text); }
+  .menu a.active::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2)); border-radius: 2px;
+  }
+  .burger {
+    display: none; background: none; border: 0; cursor: pointer; width: 40px; height: 40px;
+    flex-direction: column; justify-content: center; gap: 5px; align-items: center;
+  }
+  .burger span { width: 22px; height: 2px; background: var(--text); transition: .3s; }
+  .burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .burger.open span:nth-child(2) { opacity: 0; }
+  .burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* ---------- 공통 섹션 ---------- */
+  section { padding: 120px 24px 80px; }
+  .wrap { max-width: var(--max); margin: 0 auto; }
+  .eyebrow {
+    color: var(--accent); font-size: .85rem; font-weight: 700;
+    letter-spacing: .12em; text-transform: uppercase; margin-bottom: 10px;
+  }
+  h2 { font-size: clamp(1.8rem, 4vw, 2.4rem); letter-spacing: -.02em; margin-bottom: 36px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 28px;
+    transition: transform .25s, border-color .25s;
+  }
+  .card:hover { transform: translateY(-4px); border-color: #3a4050; }
+
+  /* ---------- 홈 ---------- */
+  #home {
+    min-height: 100vh; display: flex; align-items: center;
+    background:
+      radial-gradient(600px 400px at 80% 20%, rgba(124,156,255,.18), transparent 60%),
+      radial-gradient(500px 400px at 10% 90%, rgba(180,140,255,.14), transparent 60%);
+  }
+  .hero h1 {
+    font-size: clamp(2.4rem, 7vw, 4.2rem); line-height: 1.15;
+    letter-spacing: -.03em; margin-bottom: 20px;
+  }
+  .grad {
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero p { color: var(--muted); font-size: 1.15rem; max-width: 600px; margin-bottom: 36px; }
+  .btns { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn {
+    padding: 13px 24px; border-radius: 999px; font-weight: 600; font-size: .95rem;
+    border: 1px solid var(--line); transition: .2s;
+  }
+  .btn.primary { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .btn.primary:hover { background: var(--accent); border-color: var(--accent); }
+  .btn:hover { border-color: var(--muted); }
+
+  /* ---------- 자기소개 ---------- */
+  .about-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 32px; align-items: start; }
+  .info-list { list-style: none; display: grid; gap: 14px; }
+  .info-list li { display: flex; justify-content: space-between; gap: 16px; border-bottom: 1px solid var(--line); padding-bottom: 12px; }
+  .info-list li:last-child { border-bottom: 0; padding-bottom: 0; }
+  .info-list .k { color: var(--muted); }
+  .info-list .v { font-weight: 600; text-align: right; }
+  .about-text p { color: var(--muted); font-size: 1.05rem; }
+  .about-text p + p { margin-top: 14px; }
+
+  /* ---------- 역량 ---------- */
+  .skills { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .skill-icon {
+    width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center;
+    background: rgba(124,156,255,.12); color: var(--accent); font-size: 1.3rem; margin-bottom: 16px;
+  }
+  .card h3 { font-size: 1.15rem; margin-bottom: 8px; }
+  .card p { color: var(--muted); font-size: .97rem; }
+
+  /* ---------- 프로젝트 ---------- */
+  .projects { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .project-thumb {
+    height: 160px; border-radius: 10px; margin-bottom: 20px;
+    background: linear-gradient(135deg, #222838, #2a2340);
+    display: grid; place-items: center; color: var(--muted); font-size: .9rem;
+  }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .tag {
+    font-size: .8rem; padding: 4px 10px; border-radius: 999px;
+    background: #1f2430; color: var(--muted); border: 1px solid var(--line);
+  }
+
+  /* ---------- 진로 목표 ---------- */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: ""; position: absolute; left: 6px; top: 6px; bottom: 6px; width: 2px;
+    background: linear-gradient(var(--accent), var(--accent-2));
+  }
+  .step { position: relative; margin-bottom: 20px; }
+  .step::before {
+    content: ""; position: absolute; left: -28px; top: 32px; width: 14px; height: 14px;
+    border-radius: 50%; background: var(--bg); border: 3px solid var(--accent);
+  }
+  .step .when { color: var(--accent); font-weight: 700; font-size: .85rem; margin-bottom: 4px; }
+
+  footer {
+    border-top: 1px solid var(--line); text-align: center;
+    padding: 32px 24px; color: var(--muted); font-size: .9rem;
+  }
+
+  /* ---------- 스크롤 등장 효과 ---------- */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s, transform .7s; }
+  .reveal.show { opacity: 1; transform: none; }
+
+  /* ---------- 반응형 ---------- */
+  @media (max-width: 860px) {
+    .skills { grid-template-columns: 1fr 1fr; }
+    .projects { grid-template-columns: 1fr; }
+    .about-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .burger { display: flex; }
+    .menu {
+      position: fixed; top: 64px; left: 0; right: 0;
+      flex-direction: column; gap: 0; background: var(--surface);
+      border-bottom: 1px solid var(--line);
+      max-height: 0; overflow: hidden; transition: max-height .35s ease;
+    }
+    .menu.open { max-height: 400px; }
+    .menu li a { display: block; padding: 16px 24px; border-top: 1px solid var(--line); }
+    .menu a.active::after { display: none; }
+    .menu a.active { color: var(--accent); }
+    .skills { grid-template-columns: 1fr; }
+    section { padding: 96px 20px 64px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .reveal { opacity: 1; transform: none; transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="nav">
+    <a href="#home" class="logo">[활동명]<span>.</span></a>
+    <button class="burger" id="burger" aria-label="메뉴 열기" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="menu" id="menu">
+      <li><a href="#home">홈</a></li>
+      <li><a href="#about">자기소개</a></li>
+      <li><a href="#skills">역량</a></li>
+      <li><a href="#projects">프로젝트</a></li>
+      <li><a href="#goals">진로 목표</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <!-- 홈 -->
+  <section id="home">
+    <div class="wrap hero">
+      <p class="eyebrow">Portfolio</p>
+      <h1>안녕하세요,<br><span class="grad">[활동명]</span>입니다.</h1>
+      <p>[학과]에서 공부하며 [관심 분야]에 관심을 가지고 있습니다.</p>
+      <div class="btns">
+        <a href="#projects" class="btn primary">프로젝트 보기</a>
+        <a href="#about" class="btn">자기소개</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 자기소개 -->
+  <section id="about">
+    <div class="wrap">
+      <p class="eyebrow">About</p>
+      <h2>자기소개</h2>
+      <div class="about-grid">
+        <div class="card reveal">
+          <ul class="info-list">
+            <li><span class="k">이름</span><span class="v">[활동명]</span></li>
+            <li><span class="k">전공</span><span class="v">[학과]</span></li>
+            <li><span class="k">관심 분야</span><span class="v">[관심 분야]</span></li>
+          </ul>
+        </div>
+        <div class="about-text reveal">
+          <p>[자기소개 문장을 입력하세요. 어떤 계기로 전공과 관심 분야를 선택했는지 적어 보세요.]</p>
+          <p>[앞으로 어떤 사람으로 성장하고 싶은지 한두 문장으로 적어 보세요.]</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 역량 -->
+  <section id="skills">
+    <div class="wrap">
+      <p class="eyebrow">Strengths</p>
+      <h2>역량</h2>
+      <div class="skills">
+        <div class="card reveal">
+          <div class="skill-icon">✦</div>
+          <h3>[역량 1]</h3>
+          <p>[이 역량을 보여 주는 설명을 입력하세요.]</p>
+        </div>
+        <div class="card reveal">
+          <div class="skill-icon">◆</div>
+          <h3>[역량 2]</h3>
+          <p>[이 역량을 보여 주는 설명을 입력하세요.]</p>
+        </div>
+        <div class="card reveal">
+          <div class="skill-icon">●</div>
+          <h3>[역량 3]</h3>
+          <p>[이 역량을 보여 주는 설명을 입력하세요.]</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 프로젝트 -->
+  <section id="projects">
+    <div class="wrap">
+      <p class="eyebrow">Experience</p>
+      <h2>프로젝트 · 활동 경험</h2>
+      <div class="projects">
+        <article class="card reveal">
+          <div class="project-thumb">이미지 영역</div>
+          <h3>[활동 경험 1]</h3>
+          <p>[무엇을 했고, 어떤 역할을 맡았으며, 무엇을 배웠는지 적어 보세요.]</p>
+          <div class="tags"><span class="tag">[키워드]</span><span class="tag">[키워드]</span></div>
+        </article>
+        <article class="card reveal">
+          <div class="project-thumb">이미지 영역</div>
+          <h3>[활동 경험 2]</h3>
+          <p>[무엇을 했고, 어떤 역할을 맡았으며, 무엇을 배웠는지 적어 보세요.]</p>
+          <div class="tags"><span class="tag">[키워드]</span><span class="tag">[키워드]</span></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 진로 목표 -->
+  <section id="goals">
+    <div class="wrap">
+      <p class="eyebrow">Goals</p>
+      <h2>진로 목표</h2>
+      <div class="timeline">
+        <div class="step reveal">
+          <div class="card">
+            <p class="when">단기 목표</p>
+            <h3>[진로 목표 — 단기]</h3>
+            <p>[가까운 시일 내에 이루고 싶은 목표를 적어 보세요.]</p>
+          </div>
+        </div>
+        <div class="step reveal">
+          <div class="card">
+            <p class="when">장기 목표</p>
+            <h3>[진로 목표 — 장기]</h3>
+            <p>[궁극적으로 되고 싶은 모습을 적어 보세요.]</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  © <span id="year"></span> [활동명]. All rights reserved.
+</footer>
+
+<script>
+  // 모바일 메뉴 열기/닫기
+  const burger = document.getElementById('burger');
+  const menu = document.getElementById('menu');
+  burger.addEventListener('click', () => {
+    const open = menu.classList.toggle('open');
+    burger.classList.toggle('open', open);
+    burger.setAttribute('aria-expanded', open);
+  });
+  // 메뉴 클릭 시 해당 섹션으로 이동 + 모바일 메뉴 닫기
+  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    menu.classList.remove('open');
+    burger.classList.remove('open');
+    burger.setAttribute('aria-expanded', false);
+  }));
+
+  // 현재 보고 있는 섹션을 메뉴에 표시
+  const links = [...menu.querySelectorAll('a')];
+  const spy = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id));
+      }
+    });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  document.querySelectorAll('main section').forEach(s => spy.observe(s));
+
+  // 스크롤 시 카드 등장 효과
+  const rev = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('show'); rev.unobserve(e.target); } });
+  }, { threshold: .15 });
+  document.querySelectorAll('.reveal').forEach(el => rev.observe(el));
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
